@@ -3,8 +3,10 @@
 ; recursive implementation
 (defn pascal [row column]
   (cond
-    ;(> column row) (throw (Exception. (str "Invalid column " column)))
+    (>= 0 row) (throw (Exception. "Row must be positive"))
+    (>= 0 column) (throw (Exception. "Column must be positive"))
     (= row column) 1
+    (> column row) (throw (Exception. (str "Invalid column " column)))
     (= row 1) 1
     (= column 1) 1
     :else
