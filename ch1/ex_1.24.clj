@@ -1,5 +1,6 @@
 ; Exercise to time the primality test
 ; with a more sophisticated increment operation
+; and a more sophisticated prime test (Fermat test)
 
 (defn next-divisor [test-divisor]
   (if 
@@ -17,14 +18,45 @@
 (defn smallest-divisor [n]
   (find-divisor n 2))
 
-(defn prime? [n]
-  (= n (smallest-divisor n))
+(defn square [x]
+  (* x x))
+
+(defn expmod [base exp n]
+  (cond
+    (= exp 0) 1
+    (even? exp) 
+      (rem 
+        (square 
+          (expmod base (/ exp 2) n)) 
+        n)
+    :else 
+      (rem 
+        (* base
+           (expmod base (- exp 1) n))
+        n)
+    )
+  ) 
+
+(defn fermat-test [n]
+  (let [
+    try-it (fn [a]
+      (= (expmod a n n) a))
+    ]
+    (try-it (+ 1 (rand-int (- n 1)))))
   )
+
+(defn fast-prime? [n times]
+  (cond 
+    (= times 0) true
+    (fermat-test n) (fast-prime? n (- times 1))
+    :else
+      false
+  ))
 
 (defn search-for-primes [n numberOfPrimes foundPrimes]
   (cond 
     (= numberOfPrimes foundPrimes) n
-    (prime? n) 
+    (fast-prime? n 100) 
       (do
         (println (str "found prime " n))
         (search-for-primes (+ n 1) numberOfPrimes (+ 1 foundPrimes)))
