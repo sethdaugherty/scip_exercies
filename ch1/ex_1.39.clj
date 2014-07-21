@@ -1,7 +1,7 @@
 ; Exercise 1.39 approximation of the tangent function using a continued fraction
 
 (defn numeratorFunc [x iteration]
-  (if (= 1 x)
+  (if (= 1 iteration)
     x
     (* x x)))
 (defn denominatorFunc [x]
@@ -24,5 +24,5 @@
   )
 )
 
-(tan-cf 1.0 12)
-(Math/tan 1)
+(tan-cf 2.0 12)
+(Math/tan 2)
