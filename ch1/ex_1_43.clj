@@ -1,4 +1,4 @@
-; Exercise 1.43; Composing functions an arbitrary number of times
+; Exercise 1.43; Smoothing function using the average of f(x - dx), f(x), and f(x + dx)
 
 (defn repeated [func numberOfRepeats]
   (repeated-iter func numberOfRepeats func))
@@ -10,6 +10,16 @@
                    (- numberOfRepeats 1)
                    (fn [x] (func (partialFunc x))))))
 
-(defn square [x] (* x x))
+(defn average [numbers]
+  (/ (apply + numbers) (count numbers)))
 
-((repeated square 2) 5)
+(def dx 0.001)
+
+(defn smooth [func]
+  (fn [x]
+    (average [(func (- x dx))
+              (func x)
+              (func (+ x dx))])))
+
+(defn nfold-smooth [func n]
+  (repeated (smooth func) n))
